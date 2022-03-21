@@ -7,8 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class RestCalculatorApplication {
 
 	public static void main(String[] args) {
-
-		SpringApplication.run(
-				new Object[] { RestCalculatorApplication.class }, args);
+		SpringApplication.run(RestCalculatorApplication.class, args);
 	}
 }

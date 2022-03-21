@@ -1,6 +1,6 @@
 package com.witsoftware.service;
 
-import com.witsoftware.model.Equacao;
+import com.witsoftware.model.Equation;
 
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class RabbitMQSender {
 
 	String kafkaTopic = "my_topic";
 	
-	public void send(Equacao company) {
+	public void send(Equation company) {
 		amqpTemplate.convertAndSend(exchange, routingkey, company);
 		System.out.println("Send msg = " + company);
 	    
