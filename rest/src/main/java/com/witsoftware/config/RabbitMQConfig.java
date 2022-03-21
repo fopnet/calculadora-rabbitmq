@@ -2,7 +2,6 @@ package com.witsoftware.config;
 
 import com.witsoftware.rabbitmq.ProducerHandler;
 
-import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
@@ -70,7 +69,7 @@ public class RabbitMQConfig /*implements RabbitListenerConfigurer*/ {
 	}
 
 	@Bean
-	public AmqpTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+	public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
 		final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
 		rabbitTemplate.setMessageConverter(jsonMessageConverter());
 		rabbitTemplate.setEncoding("utf-8");
