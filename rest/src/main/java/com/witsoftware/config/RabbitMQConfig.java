@@ -33,6 +33,7 @@ public class RabbitMQConfig /*implements RabbitListenerConfigurer*/ {
 
 	@Bean
 	Queue queue() {
+		// return new Queue(queueName, false, false, false, null);
 		return new Queue(queueName, false);
 	}
 
@@ -73,6 +74,7 @@ public class RabbitMQConfig /*implements RabbitListenerConfigurer*/ {
 		final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
 		rabbitTemplate.setMessageConverter(jsonMessageConverter());
 		rabbitTemplate.setEncoding("utf-8");
+		rabbitTemplate.setDefaultReceiveQueue(queueName);
 		rabbitTemplate.setExchange(exchange);
 		rabbitTemplate.setRoutingKey(routingkey);
 		return rabbitTemplate;

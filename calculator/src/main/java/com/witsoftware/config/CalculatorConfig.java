@@ -2,7 +2,6 @@ package com.witsoftware.config;
 
 import com.witsoftware.rabbitmq.ConsumerHandler;
 
-import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -44,9 +43,10 @@ public class CalculatorConfig {
         return new Jackson2JsonMessageConverter();
     }
 
-    public AmqpTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(jsonMessageConverter());
+        rabbitTemplate.setDefaultReceiveQueue(queueName);
         return rabbitTemplate;
     }
 
