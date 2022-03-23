@@ -15,9 +15,9 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
+// @Configuration
+@Deprecated
 public class RabbitMQConfig /*implements RabbitListenerConfigurer*/ {
 
 	@Value("${witsoftware.rabbitmq.queue}")

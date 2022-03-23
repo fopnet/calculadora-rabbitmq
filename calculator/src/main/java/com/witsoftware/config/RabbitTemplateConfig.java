@@ -16,25 +16,23 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class CalculatorConfig {
-    private final ConnectionFactory connectionFactory;
+public class RabbitTemplateConfig {
+    // private final ConnectionFactory connectionFactory;
+    private final RabbitAdmin rabbitAdmin;
 
     @Value("${witsoftware.rabbitmq.queue}")
     String queueName;
 
-    @Bean
-    public RabbitAdmin admin() {
-        return new RabbitAdmin(connectionFactory);
-    }
-
-    @Bean
+    // @Bean
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, ConsumerHandler handler) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(queueName);
         // container.setMessageListener(adapter);
         container.setMessageListener(handler);
+        // container.setMessageListener(rabbitAdmin.getRabbitTemplate());
         container.setErrorHandler(handler);
+
         return container;
     }
 
@@ -45,9 +43,14 @@ public class CalculatorConfig {
 
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-        final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        final RabbitTemplate rabbitTemplate = rabbitAdmin.getRabbitTemplate();
         rabbitTemplate.setMessageConverter(jsonMessageConverter());
         rabbitTemplate.setDefaultReceiveQueue(queueName);
+        rabbitTemplate.setUseDirectReplyToContainer(false);
+        rabbitTemplate.setReplyAddress(queueName);
+        rabbitTemplate.setReplyTimeout(20000);
+        rabbitTemplate.setReceiveTimeout(20000);
+        rabbitTemplate.setUserCorrelationId(true);
         return rabbitTemplate;
     }
 
