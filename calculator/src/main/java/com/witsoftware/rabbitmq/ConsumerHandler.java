@@ -33,22 +33,27 @@ public class ConsumerHandler implements ErrorHandler, MessageListener {
     @Override
     public void onMessage(Message message) {
         try {
-            final Equation equation = (Equation) SerializationUtils.deserialize(message.getBody());
-            final MessageProperties props = message.getMessageProperties();
-            final String correlationId = props.getHeaders().get(correlationKey).toString();
-            final Double result = calculator.calculate(equation);
-            final Message replyMessage = new Message(String.valueOf(result).getBytes(), props);
+            Equation equation = (Equation) SerializationUtils.deserialize(message.getBody());
 
-            log.info(String.format("Consumer handler received correlation id %s successfully", correlationId));
-
-            rabbitTemplate.send(props.getReplyTo(), replyMessage);
-
+            onMessage(message, equation);
         } catch (RuntimeException re) {
             log.error(re.getMessage(), re);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
 
+    }
+
+    public void onMessage(Message message, Equation equation) {
+
+        MessageProperties props = message.getMessageProperties();
+        String correlationId = props.getHeaders().get(correlationKey).toString();
+        Double result = calculator.calculate(equation);
+        Message replyMessage = new Message(String.valueOf(result).getBytes(), props);
+
+        log.info(String.format("Consumer handler received correlation id %s successfully", correlationId));
+
+        rabbitTemplate.send(props.getReplyTo(), replyMessage);
     }
 
 }
