@@ -3,7 +3,6 @@
 - REST API que expõe as operações de soma, subtracção, multiplicação e divisão;
 - Suporte para dois operandos apenas (a e b, por simplicidade). text/Code 
 - Suporte para arbitraryprecision signed decimal numbers.
-### Requisitos Funcionais:
 
 ### Requisitos Não Funcionais:
 - Projecto Gradle ou Maven com pelo menos dois módulos — rest e calculator.
