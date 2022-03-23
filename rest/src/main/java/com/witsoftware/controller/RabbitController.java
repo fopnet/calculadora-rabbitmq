@@ -22,11 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping(value = "/calculator/")
-@Slf4j
 @RequiredArgsConstructor
 public class RabbitController {
 
@@ -93,31 +91,10 @@ public class RabbitController {
 				.build()
 				.buildAmqpMessage();
 
-		// Message message = messageBuilder(first, "/", second);
-
 		Object result = rabbitTemplate.convertSendAndReceive(message);
 
 		return ok(of(result));
 	}
-	/*
-		private Message messageBuilder(String first, String operator, String second) {
-	
-			Equation equation = new Equation();
-			equation.setFirstOperand(Double.parseDouble(first));
-			equation.setSecondOperand(Double.parseDouble(second));
-			equation.setOperador(operator);
-	
-			byte[] body = SerializationUtils.serialize(equation);
-			String correlationId = UUID.randomUUID().toString();
-			log.info("Unique identifier:" + correlationId);
-	
-			MessageProperties props = new MessageProperties();
-			props.getHeaders().put(correlationKey, correlationId);
-			props.setContentType("text/plain");
-	
-			return new Message(body, props);
-		}
-		*/
 
 	private static ResponseEntity<Map<String, String>> ok(Optional<Object> optResult) {
 		Map<String, String> resultMap = new HashMap<>();
