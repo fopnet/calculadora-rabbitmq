@@ -17,4 +17,12 @@ public class Equation implements Serializable {
 	private String operador;
 	private Double secondOperand;
 
+	public String getOperatorOne() {
+		return this.firstOperand < 0 ? "-" : "+";
+	}
+
+	public String getOperatorTwo() {
+		return this.operador;
+	}
+
 }
