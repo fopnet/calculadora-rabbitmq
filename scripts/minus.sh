@@ -1,0 +1,1 @@
+curl -X GET "http://localhost:9000/calculator/minus?a=5&b=10" -H "accept: application/json"    -H 'Content-Type:application/json' -H 'Content-Encoding:UTF-8'

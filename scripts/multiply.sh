@@ -1,0 +1,1 @@
+curl -X GET "http://localhost:9000/calculator/multiply?a=2&b=3" -H "accept: application/json"    -H 'Content-Type:application/json' -H 'Content-Encoding:UTF-8'

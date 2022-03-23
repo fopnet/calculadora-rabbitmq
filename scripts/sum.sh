@@ -1,1 +1,1 @@
-curl -X GET "http://localhost:9000/calculator/sum?a=2&b=3" -H "accept: application/json"    -H 'Content-Type:application/json' -H 'Content-Encoding:UTF-8'
+curl -X GET "http://localhost:9000/calculator/sum?a=2.1&b=3.4" -H "accept: application/json"    -H 'Content-Type:application/json' -H 'Content-Encoding:UTF-8'

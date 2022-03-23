@@ -5,14 +5,14 @@ import static java.util.Optional.of;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
-import com.witsoftware.model.Equation;
+import com.witsoftware.builder.AdditionMessageBuilder;
+import com.witsoftware.builder.DivisionMessageBuilder;
+import com.witsoftware.builder.MultiplicationMessageBuilder;
+import com.witsoftware.builder.SubtractionMessageBuilder;
 
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.utils.SerializationUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,30 +38,86 @@ public class RabbitController {
 	@GetMapping(value = "/sum")
 	public ResponseEntity<Map<String, String>> sum(@RequestParam("a") String first, @RequestParam("b") String second) {
 
-		Message message = messageBuilder(first, "+", second);
+		Message message = AdditionMessageBuilder.builder()
+				.correlationKey(correlationKey)
+				.firstOperand(first)
+				.secondOperand(second)
+				.build()
+				.buildAmqpMessage();
 
 		Object result = rabbitTemplate.convertSendAndReceive(message);
 
 		return ok(of(result));
 	}
 
-	private Message messageBuilder(String first, String operator, String second) {
+	@GetMapping(value = "/minus")
+	public ResponseEntity<Map<String, String>> minus(@RequestParam("a") String first,
+			@RequestParam("b") String second) {
 
-		Equation equation = new Equation();
-		equation.setFirstOperand(Double.parseDouble(first));
-		equation.setSecondOperand(Double.parseDouble(second));
-		equation.setOperador(operator);
+		Message message = SubtractionMessageBuilder.builder()
+				.correlationKey(correlationKey)
+				.firstOperand(first)
+				.secondOperand(second)
+				.build()
+				.buildAmqpMessage();
 
-		byte[] body = SerializationUtils.serialize(equation);
-		String correlationId = UUID.randomUUID().toString();
-		log.info("Unique identifier:" + correlationId);
+		Object result = rabbitTemplate.convertSendAndReceive(message);
 
-		MessageProperties props = new MessageProperties();
-		props.getHeaders().put(correlationKey, correlationId);
-		props.setContentType("text/plain");
-
-		return new Message(body, props);
+		return ok(of(result));
 	}
+
+	@GetMapping(value = "/multiply")
+	public ResponseEntity<Map<String, String>> multiply(@RequestParam("a") String first,
+			@RequestParam("b") String second) {
+
+		Message message = MultiplicationMessageBuilder.builder()
+				.correlationKey(correlationKey)
+				.firstOperand(first)
+				.secondOperand(second)
+				.build()
+				.buildAmqpMessage();
+
+		Object result = rabbitTemplate.convertSendAndReceive(message);
+
+		return ok(of(result));
+	}
+
+	@GetMapping(value = "/divide")
+	public ResponseEntity<Map<String, String>> divide(@RequestParam("a") String first,
+			@RequestParam("b") String second) {
+
+		Message message = DivisionMessageBuilder.builder()
+				.correlationKey(correlationKey)
+				.firstOperand(first)
+				.secondOperand(second)
+				.build()
+				.buildAmqpMessage();
+
+		// Message message = messageBuilder(first, "/", second);
+
+		Object result = rabbitTemplate.convertSendAndReceive(message);
+
+		return ok(of(result));
+	}
+	/*
+		private Message messageBuilder(String first, String operator, String second) {
+	
+			Equation equation = new Equation();
+			equation.setFirstOperand(Double.parseDouble(first));
+			equation.setSecondOperand(Double.parseDouble(second));
+			equation.setOperador(operator);
+	
+			byte[] body = SerializationUtils.serialize(equation);
+			String correlationId = UUID.randomUUID().toString();
+			log.info("Unique identifier:" + correlationId);
+	
+			MessageProperties props = new MessageProperties();
+			props.getHeaders().put(correlationKey, correlationId);
+			props.setContentType("text/plain");
+	
+			return new Message(body, props);
+		}
+		*/
 
 	private static ResponseEntity<Map<String, String>> ok(Optional<Object> optResult) {
 		Map<String, String> resultMap = new HashMap<>();
