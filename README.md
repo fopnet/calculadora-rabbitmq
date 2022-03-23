@@ -37,5 +37,3 @@
 - Command Pattern
 - Builder
 - Some Units Test using Mockito including static methods
-
-###End
