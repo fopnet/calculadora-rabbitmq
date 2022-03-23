@@ -1,13 +1,11 @@
-package com.witsfotware.rabbitmq;
+package com.witsoftware.rabbitmq;
 
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.inOrder;
 
 import com.witsoftware.model.Equation;
-import com.witsoftware.rabbitmq.ConsumerHandler;
 import com.witsoftware.service.CalculatorService;
 
 import org.hamcrest.core.Is;
@@ -75,14 +73,6 @@ public class ConsumerHandlerUnitTest {
             assertThat(SerializationUtils.deserialize(message.getBody()), Is.is(equation));
         }
 
-    }
-
-    @Test
-    public void orderOfCalls() {
-        given(calculator.calculate(equation)).willReturn(5d);
-
-        consumerHandler.onMessage(message, equation);
-
         InOrder inOrder = inOrder(calculator, rabbitTemplate);
         inOrder.verify(calculator).calculate(equation);
         // inOrder.verify(log)
@@ -90,6 +80,7 @@ public class ConsumerHandlerUnitTest {
         inOrder.verify(rabbitTemplate).send(eq(props.getReplyTo()), any(Message.class));
 
         inOrder.verifyNoMoreInteractions();
+
     }
 
 }

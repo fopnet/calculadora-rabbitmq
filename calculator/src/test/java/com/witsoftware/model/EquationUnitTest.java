@@ -1,8 +1,6 @@
-package com.witsfotware.model;
+package com.witsoftware.model;
 
 import static org.junit.Assert.assertThat;
-
-import com.witsoftware.model.Equation;
 
 import org.hamcrest.core.Is;
 import org.junit.Before;

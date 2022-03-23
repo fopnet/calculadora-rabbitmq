@@ -14,8 +14,9 @@ public class CalculatorService {
         Calculator calculator = new Calculator();
 
         // Create command operation and execute it
-        CalculatorCommand.builder()
-                .calculator(calculator)
+        CalculatorCommand.CalculatorCommandBuilder builder = CalculatorCommand.builder();
+
+        builder.calculator(calculator)
                 .operator(equation.getOperatorOne())
                 .operand(equation.getFirstOperand())
                 .build()
