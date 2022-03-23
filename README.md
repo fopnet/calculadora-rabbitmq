@@ -20,18 +20,18 @@
 ### Rabbit UI
 - http://localhost:15672/
 
-### Docker 
-./scripts/dockercompose up
+### Running Docker 
+./scripts/docker-compose up
 
 ### Test usage
-./scripts/sum.sh
-./scripts/multiply.sh
-./scripts/minus.sh
-./scripts/sdivideum.sh
+- ./scripts/sum.sh
+- ./scripts/multiply.sh
+- ./scripts/minus.sh
+- ./scripts/sdivideum.sh
 
 ### Git repository
 
- - [GitHub Project Link](https://github.com/fopnet/calculadora-rabbitmq")
+ - [GitHub Project Link](https://github.com/fopnet/calculadora-rabbitmq)
 
 ### Extra Design Patterns Applied
 - Command Pattern
