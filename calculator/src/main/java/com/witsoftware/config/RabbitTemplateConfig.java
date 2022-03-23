@@ -28,8 +28,8 @@ public class RabbitTemplateConfig {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(queueName);
-        // container.setMessageListener(adapter);
         container.setMessageListener(handler);
+        // container.setMessageListener(adapter);
         // container.setMessageListener(rabbitAdmin.getRabbitTemplate());
         container.setErrorHandler(handler);
 

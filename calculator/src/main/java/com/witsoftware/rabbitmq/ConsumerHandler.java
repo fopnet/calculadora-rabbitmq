@@ -6,7 +6,6 @@ import com.witsoftware.service.CalculatorService;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageListener;
 import org.springframework.amqp.core.MessageProperties;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.utils.SerializationUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,21 +31,14 @@ public class ConsumerHandler implements ErrorHandler, MessageListener {
     }
 
     @Override
-    @RabbitListener(queues = { "my-queue" })
     public void onMessage(Message message) {
         try {
             final Equation equation = (Equation) SerializationUtils.deserialize(message.getBody());
-            log.info("message received on consumer !");
-            log.info(equation.toString());
+            final MessageProperties props = message.getMessageProperties();
+            final String correlationId = props.getHeaders().get(correlationKey).toString();
+            final Double result = calculator.calculate(equation);
+            final Message replyMessage = new Message(String.valueOf(result).getBytes(), props);
 
-            MessageProperties props = message.getMessageProperties();
-
-            String correlationId = props.getHeaders().get(correlationKey).toString();
-
-            rabbitTemplate.setCorrelationKey(correlationId);
-
-            Double result = calculator.calculate(equation);
-            Message replyMessage = new Message(String.valueOf(result).getBytes(), props);
             log.info(String.format("Consumer handler received correlation id %s successfully", correlationId));
 
             rabbitTemplate.send(props.getReplyTo(), replyMessage);

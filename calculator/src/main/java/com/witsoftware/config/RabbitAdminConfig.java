@@ -17,12 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RabbitAdminConfig {
 
-    @Value("${witsoftware.rabbitmq.exchange}")
-    String exchangeName;
-
-    // @Value("${witsoftware.rabbitmq.routingkey}")
-    // private String routingkey;
-
     @Value("${witsoftware.rabbitmq.queue}")
     String queueName;
 
@@ -31,7 +25,6 @@ public class RabbitAdminConfig {
     @Bean
     public RabbitAdmin admin() {
         connectionFactory.setHost("localhost");
-        // connectionFactory.setPort();
         connectionFactory.setPublisherReturns(true);
         return new RabbitAdmin(connectionFactory);
     }
