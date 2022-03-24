@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-abstract class AmqpMessageBuilder {
+public abstract class AmqpMessageBuilder {
     private String firstOperand;
     private String secondOperand;
     private String correlationKey;

@@ -1,8 +1,11 @@
 package com.witsoftware.service;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 
 import com.witsoftware.model.Equation;
 import com.witsoftware.service.command.Calculator;
@@ -10,7 +13,6 @@ import com.witsoftware.service.command.CalculatorCommand;
 import com.witsoftware.service.command.CalculatorCommand.CalculatorCommandBuilder;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -40,35 +42,31 @@ public class CalculatorServiceUnitTest {
     }
 
     @Test
-    @Ignore(value = "Incomplete")
     public void calculate() {
 
-        CalculatorCommandBuilder commandbuilder1 = mock(CalculatorCommandBuilder.class);
-        CalculatorCommand calculator1 = mock(CalculatorCommand.class);
+        CalculatorCommandBuilder commandbuilder = mock(CalculatorCommandBuilder.class);
+        CalculatorCommand calculatorCmd = mock(CalculatorCommand.class);
 
-        given(commandbuilder1.build()).willReturn(calculator1);
+        given(commandbuilder.calculator(any(Calculator.class))).willReturn(commandbuilder);
+        given(commandbuilder.operator(equation.getOperatorOne())).willReturn(commandbuilder);
+        given(commandbuilder.operand(equation.getFirstOperand())).willReturn(commandbuilder);
+
+        given(commandbuilder.operator(equation.getOperatorTwo())).willReturn(commandbuilder);
+        given(commandbuilder.operand(equation.getSecondOperand())).willReturn(commandbuilder);
+        given(commandbuilder.build()).willReturn(calculatorCmd);
 
         try (MockedStatic<CalculatorCommand> command1 = Mockito.mockStatic(CalculatorCommand.class)) {
-            command1.when(() -> CalculatorCommand.builder()).thenReturn(commandbuilder1);
-
-            // try (MockedStatic<CalculatorCommand> command2 = Mockito.mockStatic(CalculatorCommand.class)) {
-            // command1.when(() -> CalculatorCommand.builder()).thenReturn(commandbuilder2);
+            command1.when(() -> CalculatorCommand.builder()).thenReturn(commandbuilder);
 
             calculatorService.calculate(equation);
 
-            then(commandbuilder1).should().calculator(calculatorCaptor.capture());
-            then(commandbuilder1).should().operator(equation.getOperatorOne());
-            then(commandbuilder1).should().operand(equation.getFirstOperand());
-            then(commandbuilder1).should().build();
-            then(calculator1).should().execute();
+            then(commandbuilder).should(times(2)).calculator(calculatorCaptor.capture());
+            then(commandbuilder).should().operator(equation.getOperatorOne());
+            then(commandbuilder).should().operand(equation.getFirstOperand());
+            then(commandbuilder).should(times(2)).build();
+            then(calculatorCmd).should(times(2)).execute();
 
-            // then(commandbuilder2).should().calculator(calculatorCaptor.capture());
-            // then(commandbuilder2).should().operator(equation.getOperatorOne());
-            // then(commandbuilder2).should().operand(equation.getFirstOperand());
-            // then(commandbuilder2).should().build();
-            // then(calculator1).should().execute();
-
-            then(calculatorCaptor.getValue()).should().getTotal();
+            assertNotNull(calculatorCaptor.getValue());
 
         }
     }
